@@ -15,7 +15,13 @@ const getSalesById = async (id) => {
   return { status: serviceResponse.SUCCESSFUL, data };
 };
 
+const create = async (body) => {
+  const newSales = await salesModel.createSale(body);
+  return { status: serviceResponse.CREATED, data: { newSales } };
+};
+
 module.exports = {
   getAllSales,
   getSalesById,
+  create,
 };
