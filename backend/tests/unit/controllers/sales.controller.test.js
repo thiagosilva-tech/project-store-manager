@@ -80,5 +80,18 @@ describe('Unit Tests - Sales Controller', function () {
       expect(res.status.calledWith(201)).to.be.equal(true);
       expect(res.json.calledWith(saleBody)).to.be.equal(true);
     });
+    it('create should return an error response when a product is not found', async function () {
+      // Arrange
+      const req = { body: { /* ... */ } };
+      const res = { status: Sinon.stub().returnsThis(), json: Sinon.stub() };
+      Sinon.stub(salesService, 'create').resolves({ status: 'NOT_FOUND', data: { message: 'Product not found' } });
+    
+      // Act
+      await salesController.create(req, res);
+    
+      // Assert
+      expect(res.status).to.have.been.calledWith(404);
+      expect(res.json).to.have.been.calledWith({ message: 'Product not found' });
+    });
   });
 });

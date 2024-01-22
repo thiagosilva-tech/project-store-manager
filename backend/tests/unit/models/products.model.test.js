@@ -30,22 +30,34 @@ describe('Unit Tests - Products MODEL:', function () {
     expect(result).to.deep.equal(expectedResult);
   });
 
-  // it('Should create a product successfully', async function () {
-  //   const expectedResult = { id: 5, name: 'Product 5' };
-  //   sinon.stub(connection, 'execute').resolves([expectedResult]);
-  //   const result = await productsModel.createProduct('Product 5');
-
-  //   expect(result).to.be.an('object');
-  //   expect(result).to.deep.equal(expectedResult);
-  // });
+  it('Should create a product successfully', async function () {
+    // Arrange
+    const expectedResult = { id: 5, name: 'Product 5' };
+    sinon.stub(connection, 'execute').resolves([{ insertId: expectedResult.id }]);
+    
+    // Act
+    const result = await productsModel.createProduct('Product 5');
+  
+    // Assert
+    expect(result).to.be.an('object');
+    expect(result).to.deep.equal(expectedResult);
+  });
    
-  // it('Should update a product successfully', async function () {
-  //   const expectedResult = { id: 5, name: 'Updated Product' };
-  //   sinon.stub(connection, 'execute').resolves([expectedResult]);
-  //   const result = await productsModel.updateProduct(5, 'Updated Product');
-
-  //   expect(result).to.be.equal('1');
-  // });
+  it('Should update a product successfully', async function () {
+    // Arrange
+    const expectedResult = { id: 5, name: 'Updated Product' };
+    sinon.stub(connection, 'execute')
+      .onFirstCall().resolves({ affectedRows: 1 })
+      .onSecondCall()
+      .resolves([expectedResult]);
+  
+    // Act
+    const result = await productsModel.updateProduct(5, 'Updated Product');
+  
+    // Assert
+    expect(result).to.be.an('object');
+    expect(result).to.deep.equal(expectedResult);
+  });
    
   it('Should delete a product successfully', async function () {
     const expectedResult = 1;

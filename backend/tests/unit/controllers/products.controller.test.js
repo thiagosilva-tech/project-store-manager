@@ -5,6 +5,7 @@ const sinonChai = require('sinon-chai');
 const { productsService } = require('../../../src/services');
 const { allProductsServiceResponseMock, allProductsMock } = require('../mocks/products.mock');
 const { productsController } = require('../../../src/controllers');
+const validateProductCreationFields = require('../../../src/middlewares/products.middlewares');
 
 chai.use(sinonChai);
 
@@ -123,6 +124,61 @@ describe('Unit Tests - Products Controller', function () {
       expect(productsService.deleteProduct.calledWith(req.params.id)).to.be.equal(true);
       expect(res.status.calledWith(200)).to.be.equal(true);
       expect(res.json.calledWith({})).to.be.equal(true);
+    });
+  });
+
+  describe('Middleware Tests - validateProductCreationFields', function () {
+    it('should pass validation for valid input', function (done) {
+      const req = { body: { name: 'ValidProduct' } };
+      const res = {};
+      const next = () => {
+        // Validation passed, so this middleware should call the next function
+        done();
+      };
+  
+      validateProductCreationFields(req, res, next);
+    });
+  
+    it('should return a 400 error for missing required field', function (done) {
+      const req = { body: {} };
+      const res = {
+        status: (code) => {
+          expect(code).to.equal(400);
+          return {
+            json: (response) => {
+              expect(response.message).to.equal('"name" is required');
+              done();
+            },
+          };
+        },
+      };
+      const next = () => {
+        // Validation failed, so this middleware should not call the next function
+        done(new Error('Next function should not be called for invalid input.'));
+      };
+  
+      validateProductCreationFields(req, res, next);
+    });
+  
+    it('should return a 422 error for invalid field length', function (done) {
+      const req = { body: { name: 'Shor' } };
+      const res = {
+        status: (code) => {
+          expect(code).to.equal(422);
+          return {
+            json: (response) => {
+              expect(response.message).to.equal('"name" length must be at least 5 characters long');
+              done();
+            },
+          };
+        },
+      };
+      const next = () => {
+        // Validation failed, so this middleware should not call the next function
+        done(new Error('Next function should not be called for invalid input.'));
+      };
+    
+      validateProductCreationFields(req, res, next);
     });
   });
 });
