@@ -26,7 +26,16 @@ const updateProduct = async (id, name) => {
     return { status: serviceResponse.NOT_FOUND, data: { message: 'Product not found' } };
   }
  
-  return { status: serviceResponse.CREATED, data: updatedProduct };
+  return { status: serviceResponse.SUCCESSFUL, data: updatedProduct };
+};
+
+const deleteProduct = async (id) => { 
+  const deletedProduct = await productsModel.deleteProduct(id); 
+  if (!deletedProduct) {
+    return { status: serviceResponse.NOT_FOUND, data: { message: 'Product not found' } };
+  }
+ 
+  return { status: serviceResponse.DELETED, data: deletedProduct };
 };
 
 module.exports = {
@@ -34,4 +43,5 @@ module.exports = {
   getProductsById,
   create,
   updateProduct,
+  deleteProduct,
 };

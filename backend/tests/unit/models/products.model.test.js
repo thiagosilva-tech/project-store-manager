@@ -30,6 +30,32 @@ describe('Unit Tests - Products MODEL:', function () {
     expect(result).to.deep.equal(expectedResult);
   });
 
+  // it('Should create a product successfully', async function () {
+  //   const expectedResult = { id: 5, name: 'Product 5' };
+  //   sinon.stub(connection, 'execute').resolves([expectedResult]);
+  //   const result = await productsModel.createProduct('Product 5');
+
+  //   expect(result).to.be.an('object');
+  //   expect(result).to.deep.equal(expectedResult);
+  // });
+   
+  // it('Should update a product successfully', async function () {
+  //   const expectedResult = { id: 5, name: 'Updated Product' };
+  //   sinon.stub(connection, 'execute').resolves([expectedResult]);
+  //   const result = await productsModel.updateProduct(5, 'Updated Product');
+
+  //   expect(result).to.be.equal('1');
+  // });
+   
+  it('Should delete a product successfully', async function () {
+    const expectedResult = 1;
+    sinon.stub(connection, 'execute').resolves([{ affectedRows: expectedResult }]);
+    const result = await productsModel.deleteProduct(1);
+
+    expect(result).to.be.an('number');
+    expect(result).to.equal(expectedResult);
+  });
+   
   afterEach(function () {
     sinon.restore();
   });

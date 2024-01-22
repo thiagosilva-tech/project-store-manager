@@ -12,8 +12,8 @@ const getProductsById = async (id) => {
 
 const createProduct = async (name) => {
   const [result] = await connection.execute(`
-  INSERT INTO products (name)
-  VALUES (?)
+     INSERT INTO products (name)
+     VALUES (?)
   `, [name]);
   return {
     id: result.insertId,
@@ -23,10 +23,9 @@ const createProduct = async (name) => {
 
 const updateProduct = async (id, name) => {
   const [{ affectedRows }] = await connection.execute(`
-  UPDATE products SET name = ? WHERE id = ?
+     UPDATE products SET name = ? WHERE id = ?
   `, [name, id]);
  
-  console.log(affectedRows);
   if (affectedRows > 0) {
     const [product] = await connection.execute('SELECT * FROM products WHERE id = ?', [id]);
     return product;
@@ -35,9 +34,15 @@ const updateProduct = async (id, name) => {
   return null;
 };
 
+const deleteProduct = async (id) => {
+  const [{ affectedRows }] = await connection.execute('DELETE FROM products WHERE id = ?', [id]);
+  return affectedRows;
+};
+
 module.exports = {
   getAllProducts,
   getProductsById,
   createProduct,
   updateProduct,
+  deleteProduct,
 };
