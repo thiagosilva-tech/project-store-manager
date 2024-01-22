@@ -20,8 +20,18 @@ const create = async ({ name }) => {
   return { status: serviceResponse.CREATED, data: { newProduct } };
 };
 
+const updateProduct = async (id, name) => { 
+  const updatedProduct = await productsModel.updateProduct(id, name); 
+  if (!updatedProduct) {
+    return { status: serviceResponse.NOT_FOUND, data: { message: 'Product not found' } };
+  }
+ 
+  return { status: serviceResponse.CREATED, data: updatedProduct };
+};
+
 module.exports = {
   getAllProducts,
   getProductsById,
   create,
+  updateProduct,
 };
