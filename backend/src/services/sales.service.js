@@ -1,5 +1,6 @@
-const { salesModel } = require('../models');
+const { salesModel, productsModel } = require('../models');
 const serviceResponse = require('./messages/messages');
+const areAllProductsAvailable = require('../utils/areAllProductsAvailable');
 
 const getAllSales = async () => {
   let data = await salesModel.getAllSales();
@@ -16,7 +17,15 @@ const getSalesById = async (id) => {
 };
 
 const create = async (body) => {
+  const products = await productsModel.getAllProducts();
+  const productsAvailable = areAllProductsAvailable(body, products);
+
+  if (!productsAvailable) {
+    return { status: serviceResponse.NOT_FOUND, data: { message: 'Product not found' } };
+  }
+
   const newSales = await salesModel.createSale(body);
+
   return { status: serviceResponse.CREATED, data: { newSales } };
 };
 

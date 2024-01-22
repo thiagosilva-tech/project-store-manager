@@ -17,6 +17,9 @@ const getSalesById = async (req, res) => {
 
 const create = async (req, res) => {
   const { status, data } = await salesService.create(req.body);
+  if (status === 'NOT_FOUND') {
+    return res.status(mapStatusHTTP(status)).json(data);
+  }
   return res.status(mapStatusHTTP(status)).json(data.newSales);
 };
 
