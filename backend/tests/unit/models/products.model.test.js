@@ -45,15 +45,14 @@ describe('Unit Tests - Products MODEL:', function () {
    
   it('Should update a product successfully', async function () {
     // Arrange
-    const expectedResult = { id: 5, name: 'Updated Product' };
+    const expectedResult = { id: 1, name: 'Updated Product' };
     sinon.stub(connection, 'execute')
-      .onFirstCall().resolves({ affectedRows: 1 })
+      .onFirstCall().resolves([{ changedRows: 1 }])
       .onSecondCall()
-      .resolves([expectedResult]);
+      .resolves(expectedResult);
   
     // Act
-    const result = await productsModel.updateProduct(5, 'Updated Product');
-  
+    const result = await productsModel.updateProduct(1, 'Updated Product');
     // Assert
     expect(result).to.be.an('object');
     expect(result).to.deep.equal(expectedResult);

@@ -22,11 +22,14 @@ const create = async ({ name }) => {
 
 const updateProduct = async (id, name) => { 
   const updatedProduct = await productsModel.updateProduct(id, name); 
+
   if (!updatedProduct) {
     return { status: serviceResponse.NOT_FOUND, data: { message: 'Product not found' } };
   }
+
+  const [[product]] = updatedProduct;
  
-  return { status: serviceResponse.SUCCESSFUL, data: updatedProduct };
+  return { status: serviceResponse.SUCCESSFUL, data: product };
 };
 
 const deleteProduct = async (id) => { 

@@ -22,16 +22,16 @@ const createProduct = async (name) => {
 };
 
 const updateProduct = async (id, name) => {
-  const result = await connection.execute(`
+  const [{ changedRows }] = await connection.execute(`
     UPDATE products SET name = ? WHERE id = ?
   `, [name, id]);
 
-  if (result && result.affectedRows > 0) {
-    const [product] = await connection.execute('SELECT * FROM products WHERE id = ?', [id]);
+  if (changedRows && changedRows > 0) {
+    const product = await connection.execute('SELECT * FROM products WHERE id = ?', [id]);
     return product;
   }
 
-  return null;
+  return changedRows;
 };
 
 const deleteProduct = async (id) => {
